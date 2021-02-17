@@ -17,7 +17,7 @@ namespace DiscordBot
     {
         public static async Task Main(string[] args)
         {
-            await CreateHostBuilder(args).Build().RunAsync();
+            await CreateHostBuilder(args).RunConsoleAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -54,7 +54,8 @@ namespace DiscordBot
             services.AddTransient<IDiscordCommand, PingCommand>();
             services.AddTransient<IDiscordCommand, EchoCommand>();
             services.AddTransient<IDiscordCommand, QuoteCommand>();
-            services.Configure<DiscordOptions>(config.GetSection("Discord"));
+
+            services.ConfigureWithValidation<DiscordOptions>(config.GetSection("Discord"));
             services.AddHostedService<DiscordService>();
 
             services.AddTransient<IQuoteHelper, QuoteHelper>();

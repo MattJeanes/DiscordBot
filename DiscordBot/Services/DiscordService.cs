@@ -40,7 +40,7 @@ namespace DiscordBot.Services
         {
             _logger.LogInformation("Discord service is starting");
 
-            _client.MessageCreated += async (e) =>
+            _client.MessageCreated += async (_,e) =>
             {
                 try
                 {
@@ -80,6 +80,17 @@ namespace DiscordBot.Services
                 return;
             }
 
+            // Add your permission checks here
+            //if (!string.IsNullOrEmpty(command.Permission))
+            //{
+            //    var user = await command.GetClientUser(e);
+            //    if (!_userHelper.HasPermission(user, command.Permission))
+            //    {
+            //        await e.Message.RespondAsync($"You do not have permission to use this command");
+            //        return;
+            //    };
+            //}
+
             _logger.LogInformation($"Command {command} with args {string.Join(" ", args)} run by {e.Author.Username}");
             try
             {
@@ -92,7 +103,7 @@ namespace DiscordBot.Services
             }
         }
 
-        private async Task GuildMemberRemovedAsync(GuildMemberRemoveEventArgs e)
+        private async Task GuildMemberRemovedAsync(DiscordClient client, GuildMemberRemoveEventArgs e)
         {
             await Task.WhenAll(_commands.Select(x => x.MemberRemoved(e)).ToArray());
         }
